@@ -89,7 +89,7 @@ def create_app(test_config=None):
         except:
             abort(400)
 
-    # Get questions by category: GET /categories/${id}/questions
+    # Get questions by category
     @app.route("/categories/<int:category_id>/questions")
     def retrieve_questions_by_category(category_id):
         selection = Question.query.order_by(Question.id).filter(

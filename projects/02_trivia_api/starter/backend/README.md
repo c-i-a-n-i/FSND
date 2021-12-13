@@ -1,8 +1,8 @@
 # Backend - Full Stack Trivia API 
 
-### Installing Dependencies for the Backend
+## Installing Dependencies for the Backend
 
-1. **Python 3.7** - Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+1. **Python 3.9** - Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
 
 
 2. **Virtual Enviornment** - We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
@@ -22,87 +22,356 @@ This will install all of the required packages we selected within the `requireme
 
  - [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross origin requests from our frontend server. 
 
-### Database Setup
-With Postgres running, restore a database using the trivia.psql file provided. From the backend folder in terminal run:
+## Database Setup
+1. **Database setup** - With Postgres running, create the trivia and trivia_test databases using the setup.psql file provided. These would be our actual and test databases respectively. From the backend folder in terminal, in psql context, run:
+```bash
+\i setup.sql
+```
+2. **Populate tables** - Create and populate the questions and categories tables for both databases using the trivia.psql file provided. From the backend folder in termina, and logging into each database in psql, run:
 ```bash
 psql trivia < trivia.psql
 ```
+if that doesn't work, you might need to force it. Use: 
+```bash
+psql -d trivia -U postgres -a -f trivia.psql
+```
+At this point, you should have questions and categories tables populated with some data in each database 
+## Running the server
 
-### Running the server
-
-From within the `./src` directory first ensure you are working using your created virtual environment.
+From within the `./backend` directory first ensure you are working using your created virtual environment.
 
 To run the server, execute:
 
 ```bash
+export FLASK_APP=flaskr
+export FLASK_ENV=development
 flask run --reload
 ```
-
+or for Windows users, execute:
+```cmd
+set FLASK_APP=flaskr
+set FLASK_ENV=development
+flask run --reload
+```
 The `--reload` flag will detect file changes and restart the server automatically.
 
-## ToDo Tasks
-These are the files you'd want to edit in the backend:
-
-1. *./backend/flaskr/`__init__.py`*
-2. *./backend/test_flaskr.py*
-
-
-One note before you delve into your tasks: for each endpoint, you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
-
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
-
-
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-
-
-3. Create an endpoint to handle GET requests for all available categories. 
-
-
-4. Create an endpoint to DELETE question using a question ID. 
-
-
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-
-
-6. Create a POST endpoint to get questions based on category. 
-
-
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-
-
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-
-
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
-
-
-
-## Review Comment to the Students
+## Common issues
+1. If you encounter TypeError: can't apply this `__setattr__` to DefaultMeta object, 
+you are probably using python version 3.8.4. Either downgrade to 3.8.3 or upgrade to 3.8.5 or higher: [github issue link](https://github.com/pallets/flask-sqlalchemy/issues/852)
+2. flask run might not work in development environment. This is an issue with version 0.15.5 of Werkzeug. You should upgrade to 0.15.6 to fix it, or alternatively, try running this work around: 
+```cmd
+set FLASK_DEBUG=1 && python -m flask run
 ```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
+3. You can have some issue with `AttributeError: module 'time' has no attribute 'clock'`. Just replace time.clock with time.time in Lib\site-packages\sqlalchemy\util\compat.py
 
-Endpoints
-GET '/api/v1.0/categories'
-GET ...
-POST ...
-DELETE ...
+## API reference
+The following are the API endpoints included in this project, along with a brief description of what they do and their expected results. Pagination is supported for all endpoints with a page size of 10 items. All enpoints return a success property which is True if the api call was successful and False if something went wrong.
 
-GET '/api/v1.0/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
+### Get questions 
+_GET /questions_
 
+Retrieves all questions and categories in the database, sorted by question id and paginated. If no page query parameter is passed, the first page is returned.
+- Request Arguments: page - integer
+- Returns: An object with 10 paginated questions, total questions, object including all categories, and current category string
+
+
+Example:
+
+REQUEST
+```bash
+curl http://127.0.0.1:5000/questions?page=4
 ```
 
+RESPONSE
+```
+{
+    'questions': [
+        {
+            'id': 1,
+            'question': 'This is a question',
+            'answer': 'This is an answer', 
+            'difficulty': 5,
+            'category': 2
+        },
+    ],
+    'total_questions': 31,
+    'categories': { 
+        '1' : "Science",
+        '2' : "Art",
+        '3' : "Geography",
+        '4' : "History",
+        '5' : "Entertainment",
+        '6' : "Sports" 
+    },
+    'current_category': 'History',
+    'success': True
+}
+```
+
+### Get next question for quiz
+_POST /quizzes_
+
+Given a list of previously asked questions and an optional category, retrieves a new question in that category. If no new question exists for that category, returns an empty question. If no category is passed, the question returned is taken from any category.
+- Request Body: 
+{'previous_questions':  an array of question id's such as [1, 4, 20, 15]
+'quiz_category': a string of the current category }
+- Returns: a single new question object 
+
+Example:
+
+REQUEST
+```bash
+curl http://127.0.0.1:5000/quizzes -X POST 
+-H "Content-Type: application/json" 
+-d '{   "previous_questions": [20, 3, 4],
+        "quiz_category": {"id":"1", "type": "Science"}
+    }'
+```
+
+RESPONSE
+```
+{
+    'question': {
+        'id': 1,
+        'question': 'This is a question',
+        'answer': 'This is an answer', 
+        'difficulty': 5,
+        'category': 4
+    },
+    'success': True
+}
+```
+
+### Get categories
+_GET /categories_
+
+Retrieves all categories in the database as a key value pair with the key being the category id and the value being the category type.
+
+Example:
+
+REQUEST
+```bash
+curl http://127.0.0.1:5000/categories 
+```
+
+RESPONSE
+```
+{
+    "success": True,
+    "categories": {
+        '1' : "Science",
+        '2' : "Art",
+        '3' : "Geography",
+        '4' : "History",
+        '5' : "Entertainment",
+        '6' : "Sports"
+    }
+}
+```
+
+### Get questions by category
+_GET /categories/${id}/questions_
+
+Retrieves all questions in a particular category specified by the id in the endpoint path.
+- Request Arguments: id - integer
+- Returns: An object with questions for the specified category, total questions, and current category string 
+
+Example:
+
+REQUEST
+```bash
+curl http://127.0.0.1:5000/categories/4/questions 
+```
+
+RESPONSE
+```
+{
+    'questions': [
+        {
+            'id': 1,
+            'question': 'This is a question',
+            'answer': 'This is an answer', 
+            'difficulty': 3,
+            'category': 4
+        },
+        {
+            'id': 4,
+            'question': 'This is another question',
+            'answer': 'This is another answer', 
+            'difficulty': 4,
+            'category': 4
+        },
+        {
+            'id': 8,
+            'question': 'This is yet another question',
+            'answer': 'This is yet another answer', 
+            'difficulty': 5,
+            'category': 4
+        }
+    ],
+    'total_questions': 100,
+    'current_category': 'History',
+    'success': True
+}
+```
+
+### Create questions
+_POST /questions_
+
+Creates a new question and stores it in the database.
+- Request Body: question - string, answer -string, difficulty -integer, category -integer
+- Returns: The current questions to be shown on the page, the total number of questions and the question id of the newly created question
+
+Example:
+
+REQUEST
+```bash
+curl http://127.0.0.1:5000/questions -X POST 
+-H "Content-Type: application/json" 
+-d "{
+    'question':  'Here's a new question string',
+    'answer':  'Here's a new answer string',
+    'difficulty': 1,
+    'category': 3,
+}"
+```
+
+RESPONSE
+```
+{
+    'questions': [
+        {
+            'id': 1,
+            'question': 'This is a question',
+            'answer': 'This is an answer', 
+            'difficulty': 3,
+            'category': 4
+        },
+        {
+            'id': 4,
+            'question': 'This is another question',
+            'answer': 'This is another answer', 
+            'difficulty': 4,
+            'category': 4
+        },
+        {
+            'id': 8,
+            'question': 'This is yet another question',
+            'answer': 'This is yet another answer', 
+            'difficulty': 5,
+            'category': 4
+        }
+    ],
+    'total_questions': 101,
+    'created': '101',
+    'success': True
+}
+```
+
+### Search for questions
+_POST /questions_
+
+Retrieves questions that contain the search term
+- Request Body: searchTerm - string
+- Returns: An array of questions, a number of total_questions that met the search term and the current category string 
+
+Example:
+
+REQUEST
+```bash
+curl http://127.0.0.1:5000/questions -X POST 
+-H "Content-Type: application/json" 
+-d "{
+    'searchTerm': 'this is the term the user is looking for'
+}"
+```
+
+RESPONSE
+```
+{
+    'questions': [
+        {
+            'id': 1,
+            'question': 'This is a question that has this is the term the user is looking for',
+            'answer': 'This is an answer', 
+            'difficulty': 3,
+            'category': 4
+        },
+        {
+            'id': 4,
+            'question': 'this is the term the user is looking for in another question',
+            'answer': 'This is another answer', 
+            'difficulty': 4,
+            'category': 4
+        }
+    ],
+    'total_questions': 100,
+    'current_category': 'Entertainment'
+    'success': True
+}
+```
+
+### Delete questions
+_DELETE /questions/${id}_
+
+Deletes the question with the id in the path from the database.
+- Request Arguments: id - integer
+- Returns: The deleted question id, the questions for that page and the total number of questions in the database
+
+Example:
+
+REQUEST
+```bash
+curl http://127.0.0.1:5000/questions/2 -X DELETE 
+```
+
+RESPONSE
+```
+{
+    'questions': [
+        {
+            'id': 1,
+            'question': 'This is a question that has this is the term the user is looking for',
+            'answer': 'This is an answer', 
+            'difficulty': 3,
+            'category': 4
+        },
+        {
+            'id': 4,
+            'question': 'this is the term the user is looking for in another question',
+            'answer': 'This is another answer', 
+            'difficulty': 4,
+            'category': 4
+        }
+    ],
+    'deleted': 2
+    'total_questions': 99,
+    'success': True
+}
+```
 
 ## Testing
-To run the tests, run
+To debug the endpoints, you can use the vscode debugger along with this configuration in the workspace launch.json:
+```
+{
+  "configurations": [
+    {
+      "name": "Python: Flask",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": { "FLASK_APP": "backend/flaskr", 
+                "FLASK_ENV": "development" 
+            },
+      "args": ["run", "--no-debugger"],
+      "jinja": true
+    }
+  ]
+}
+```
+To run the unit tests, in the `.\backend` folder, run the following:
 ```
 dropdb trivia_test
 createdb trivia_test

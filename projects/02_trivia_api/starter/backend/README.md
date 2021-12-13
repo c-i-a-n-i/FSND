@@ -64,14 +64,43 @@ set FLASK_DEBUG=1 && python -m flask run
 ```
 3. You can have some issue with `AttributeError: module 'time' has no attribute 'clock'`. Just replace time.clock with time.time in Lib\site-packages\sqlalchemy\util\compat.py
 
+## Testing
+To debug the endpoints, you can use the vscode debugger along with this configuration in the workspace launch.json:
+```
+{
+  "configurations": [
+    {
+      "name": "Python: Flask",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": { "FLASK_APP": "backend/flaskr", 
+                "FLASK_ENV": "development" 
+            },
+      "args": ["run", "--no-debugger"],
+      "jinja": true
+    }
+  ]
+}
+```
+To run the unit tests, in the `.\backend` folder, run the following:
+```
+dropdb trivia_test
+createdb trivia_test
+psql trivia_test < trivia.psql
+python test_flaskr.py
+```
+
 ## API reference
-The following are the API endpoints included in this project, along with a brief description of what they do and their expected results. Pagination is supported for all endpoints with a page size of 10 items. All enpoints return a success property which is True if the api call was successful and False if something went wrong.
+The following are the API endpoints included in this project, along with a brief description of what they do and their expected results. Pagination is supported for all endpoints with a page size of 10 items. All endpoints return a success property which is True if the api call was successful and False if something went wrong.
 
 ### Get questions 
 _GET /questions_
 
-Retrieves all questions and categories in the database, sorted by question id and paginated. If no page query parameter is passed, the first page is returned.
-- Request Arguments: page - integer
+Retrieves all questions in the database, sorted by question id and paginated. If no page query parameter is passed, the first page is returned.
+- Request Arguments: page - integer(optional)
 - Returns: An object with 10 paginated questions, total questions, object including all categories, and current category string
 
 
@@ -112,8 +141,8 @@ RESPONSE
 _POST /quizzes_
 
 Given a list of previously asked questions and an optional category, retrieves a new question in that category. If no new question exists for that category, returns an empty question. If no category is passed, the question returned is taken from any category.
-- Request Body: 
-{'previous_questions':  an array of question id's such as [1, 4, 20, 15]
+- Request Body: previous_questions:  an array of question id's such as [1, 4, 20, 15]
+                quiz_category: an object containing id and type of category.
 'quiz_category': a string of the current category }
 - Returns: a single new question object 
 
@@ -350,31 +379,3 @@ RESPONSE
 }
 ```
 
-## Testing
-To debug the endpoints, you can use the vscode debugger along with this configuration in the workspace launch.json:
-```
-{
-  "configurations": [
-    {
-      "name": "Python: Flask",
-      "type": "python",
-      "request": "launch",
-      "module": "flask",
-      "console": "integratedTerminal",
-      "justMyCode": false,
-      "env": { "FLASK_APP": "backend/flaskr", 
-                "FLASK_ENV": "development" 
-            },
-      "args": ["run", "--no-debugger"],
-      "jinja": true
-    }
-  ]
-}
-```
-To run the unit tests, in the `.\backend` folder, run the following:
-```
-dropdb trivia_test
-createdb trivia_test
-psql trivia_test < trivia.psql
-python test_flaskr.py
-```

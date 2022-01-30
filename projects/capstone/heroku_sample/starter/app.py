@@ -1,5 +1,6 @@
 from flask import Flask, request, abort, jsonify
 from flask_cors import CORS
+from auth import requires_auth
 from models import setup_db, Actor, Movie, Actor_Movie
 from werkzeug.exceptions import HTTPException
 
@@ -64,6 +65,7 @@ def create_app(test_config=None):
 
     # Get a movie: GET /movies/${id}
     @app.route("/movies/<int:movie_id>")
+    @requires_auth('get:movies')
     def get_movie(movie_id):
         try:
             selection = Actor_Movie.query.filter(
@@ -93,6 +95,7 @@ def create_app(test_config=None):
     # Add a movie
 
     @app.route("/movies", methods=["POST"])
+    @requires_auth('post:movies')
     def create_movie():
         body = request.get_json()
 
@@ -139,6 +142,7 @@ def create_app(test_config=None):
 
     # Delete a movie: DELETE /movies/${id}
     @app.route("/movies/<int:movie_id>", methods=["DELETE"])
+    @requires_auth('delete:movies')
     def delete_movie(movie_id):
         try:
             movie = Movie.query.filter(
@@ -191,6 +195,7 @@ def create_app(test_config=None):
 
     # Get an actor: GET /actors/${id}
     @app.route("/actors/<int:actor_id>")
+    @requires_auth('get:actors')
     def get_actor(actor_id):
         try:
             selection = Actor_Movie.query.filter(
@@ -220,6 +225,7 @@ def create_app(test_config=None):
     # Add an actor
 
     @app.route("/actors", methods=["POST"])
+    @requires_auth('post:actors')
     def create_actor():
         body = request.get_json()
 
@@ -263,6 +269,7 @@ def create_app(test_config=None):
 
     # Delete a actor: DELETE /actors/${id}
     @app.route("/actors/<int:actor_id>", methods=["DELETE"])
+    @requires_auth('delete:actors')
     def delete_actor(actor_id):
         try:
             actor = Actor.query.filter(
@@ -292,6 +299,7 @@ def create_app(test_config=None):
 
     # Update an actor: PATCH /actors/${id}/edit
     @app.route("/actors/<int:actor_id>/edit", methods=["PATCH"])
+    @requires_auth('patch:actors')
     def edit_actor(actor_id):
         body = request.get_json()
 
@@ -347,6 +355,7 @@ def create_app(test_config=None):
 
     # Update a movie: PATCH /movies/${id}/edit
     @app.route("/movies/<int:movie_id>/edit", methods=["PATCH"])
+    @requires_auth('patch:movies')
     def edit_movie(movie_id):
         body = request.get_json()
 

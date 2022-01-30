@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'dev-fuqidc7q.us.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'auth'
+API_AUDIENCE = 'movie'
 
 # AuthError Exception
 '''
@@ -139,7 +139,7 @@ def requires_auth(permission=''):
                 }, 401)
 
             check_permissions(permission, payload)
-            return f(payload, *args, **kwargs)
+            return f(*args, **kwargs)
 
         return wrapper
     return requires_auth_decorator

@@ -1,13 +1,24 @@
 # Udacity Full stack Nanodegree Capstone Project
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) and hosted on Heroku with a Flask and Postgres backend. The front end is styled with Tailwind and the backend authentication is handled by an external Auth0 service.
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) and hosted on Heroku with a Flask and Postgres backend. The front end is styled with Tailwind and the backend authentication is handled by an external Auth0 service. It is hosted live [here](https://movies-frontend-ui.herokuapp.com/). The live backend api is hosted live [here](https://movies-backend-api.herokuapp.com/)
+
+I hosted the front end and backend separately as there was no way to host a Flask backend and server side rendered front end in Next on the same app. However, the backend and front end folders of this project contain the source code for both builds.
 
 ## App Description
 
 This app is a Hulu clone with a twist: it is used by movie makers to plan movies in advance. It is used to view, edit, create and delete actors and movies.
 ![](./frontend/public/home-page.png)
 
- An authenticated user can be either a casting agent, casting director or executive producer, each with increasing levels of permissions. An unauthenticated user can still view all movies and actors but to see more details by clicking on it you have to sign in
+ An authenticated user can be either a casting agent, casting director or executive producer, each with increasing levels of permissions. An unauthenticated user can still view all movies and actors but to see more details by clicking on it you have to sign in.
+
+ ### App credentials
+ To test the different levels of RBAC for this app, I have created 3 different log in credentials corresponding to the 3 different roles for ease of testing:
+
+ *Casting agent*: email: likasi8727@mxclip.com password: CastingAgent_1
+ 
+ *Casting director:* email: likasi8737@mxclip.com password: CastingDirector_1
+
+ *Executive producer:* email: likasi8747@mxclip.com password: ExecutiveProducer_1
 
 # Account
 
@@ -92,3 +103,5 @@ With Postgres running, create and populate the movie_site and movie_site_test da
 ```bash
 python app.py
 ```
+
+6. **Test the app** - To test the app, run the movie site postman collection ini the backend folder. You can also run the unit tests in test.py. 

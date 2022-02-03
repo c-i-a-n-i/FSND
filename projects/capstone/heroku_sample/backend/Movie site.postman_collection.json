@@ -1,0 +1,182 @@
+{
+	"info": {
+		"_postman_id": "137a845f-3905-4743-b3df-4e46437c6680",
+		"name": "Movie site",
+		"description": "Tests all get, post, delete and patch endpoints for movies and actors",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:5000/actors",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Yanni Molowski\",\r\n    \"dob\": \"1977-04-04\",\r\n    \"gender\": \"Male\",\r\n    \"picture_path\": \"https://media.istockphoto.com/photos/hes-a-handsome-man-picture-id180841365?k=20&m=180841365&s=170667a&w=0&h=AsrKSMjW_WqzRaz9Q3D95lfCchxXn6GgWDojXCwRr7c=\",\r\n    \"description\": \"Some cool guy with a pretty face\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/actors",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"actors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/movies",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Spider-man 2\",\r\n    \"overview\": \"Peter Parker is an unhappy man: after two years of fighting crime as Spider-Man, his life has begun to fall apart. The girl he loves is engaged to someone else, his grades are slipping, he cannot keep any of his jobs, and on top of it, the newspaper Daily Bugle is attacking him viciously, claiming that Spider-Man is a criminal. He reaches the breaking point and gives up the crime fighter's life, once and for all. But after a failed fusion experiment, eccentric and obsessive scientist Dr. Otto Octavius is transformed into super villain Doctor Octopus, Doc Ock for short, having four long tentacles as extra hands. Peter guesses it might just be time for Spider-Man to return, but would he act upon it?\",\r\n    \"genre\": \"Action / Adventure / Fantasy / Romance / Sci-Fi\",\r\n    \"release_date\": \"2004-04-05\",\r\n    \"first_air_date\": \"2004-04-07\",\r\n    \"rating\": \"7\",\r\n    \"backdrop_path\": \"https://img.yts.mx/assets/images/movies/Spider_Man_2_2004/medium-cover.jpg\",\r\n    \"poster_path\": \"https://img.yts.mx/assets/images/movies/Spider_Man_2_2004/medium-cover.jpg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/movies",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/movies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/movies",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/actors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/actors",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"actors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/actors/<id>/edit",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n            \"name\": \"Yanni Molowski\",\r\n            \"dob\": \"1977-04-04\",\r\n            \"gender\": \"Male\",\r\n            \"picture_path\": \"https://media.istockphoto.com/photos/hes-a-handsome-man-picture-id180841365?k=20&m=180841365&s=170667a&w=0&h=AsrKSMjW_WqzRaz9Q3D95lfCchxXn6GgWDojXCwRr7c=\",\r\n            \"description\": \"Some cool guy with a pretty face\"\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/actors/4/edit",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"actors",
+						"4",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/movies/<id>/edit",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Spider-man 2\",\r\n    \"overview\": \"Peter Parker is an unhappy man: after two years of fighting crime as Spider-Man, his life has begun to fall apart. The girl he loves is engaged to someone else, his grades are slipping, he cannot keep any of his jobs, and on top of it, the newspaper Daily Bugle is attacking him viciously, claiming that Spider-Man is a criminal. He reaches the breaking point and gives up the crime fighter's life, once and for all. But after a failed fusion experiment, eccentric and obsessive scientist Dr. Otto Octavius is transformed into super villain Doctor Octopus, Doc Ock for short, having four long tentacles as extra hands. Peter guesses it might just be time for Spider-Man to return, but would he act upon it?\",\r\n    \"genre\": \"Action / Adventure / Fantasy / Romance / Sci-Fi\",\r\n    \"release_date\": \"2004-04-05\",\r\n    \"first_air_date\": \"2004-04-07\",\r\n    \"rating\": \"7\",\r\n    \"backdrop_path\": \"https://img.yts.mx/assets/images/movies/Spider_Man_2_2004/medium-cover.jpg\",\r\n    \"poster_path\": \"https://img.yts.mx/assets/images/movies/Spider_Man_2_2004/medium-cover.jpg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/movies/2/edit",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"movies",
+						"2",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
